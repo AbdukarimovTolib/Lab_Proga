@@ -4,7 +4,7 @@
 using namespace std;
 
 void Test() {
-	Date_Time today;
+	DateTime today;
 	srand(time(NULL));
 	int month = 0, day = 0, hours = 0, minute = 0, second = 0;
 	cout << "----------------------------------------------------------------" << endl;

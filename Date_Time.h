@@ -3,11 +3,11 @@
 
 using namespace std;
 
-class Date_Time
+class DateTime
 {
 	int year, month, day, hours, minute, second;
 public:
-	Date_Time();
+	DateTime();
 	char* toString();
 	void Reduce_year(); // year - 1
 	void Enlarge_year(); // year + 1
