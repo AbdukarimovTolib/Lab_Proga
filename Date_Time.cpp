@@ -3,6 +3,9 @@
 
 using namespace std;
 
+
+int DateTime::iterations = 0;
+
 // Конструктор по умолчание
 DateTime::DateTime() {
 	DateTime::set_year(2020);
@@ -12,8 +15,16 @@ DateTime::DateTime() {
 	DateTime::set_minute(54);
 	DateTime::set_second(32);
 }
+DateTime::DateTime(int day, int month, int year, int hours, int minute, int  second) {
+	DateTime::set_year(year);
+	DateTime::set_month(month);
+	DateTime::set_day(day);
+	DateTime::set_hours(hours);
+	DateTime::set_minute(minute);
+	DateTime::set_second(second);
+}
 // Перевод в строку
-char* DateTime::toString() {
+char* DateTime::tostring() {
 	stringstream MyString_1, MyString_2;
 	string ResString_1, ResSrting_2, ResaltStr;
 	if(DateTime::get_day() < 10 && DateTime::get_month() < 10)
@@ -50,91 +61,103 @@ char* DateTime::toString() {
 	return ResChar;
 }
 // уменьшение или увелечение значение!
-void DateTime::Reduce_year() { 
+void DateTime::reduce_year() { 
 	DateTime::set_year(DateTime::get_year() - 1);
+	iterations++;
 }
-void DateTime::Enlarge_year() {
+void DateTime::enlarge_year() {
 	DateTime::set_year(DateTime::get_year() + 1);
+	iterations++;
 }
-void DateTime::Reduce_month() {
+void DateTime::reduce_month() {
 	if (DateTime::get_month() - 1 < 1) {
 		DateTime::set_month(12);
-		DateTime::Reduce_year();
+		DateTime::reduce_year();
 	}
 	else
 		DateTime::set_month(DateTime::get_month() - 1);
+	iterations++;
 }
-void DateTime::Enlarge_month() {
+void DateTime::enlarge_month() {
 	if (DateTime::get_month() + 1 > 12) {
 		DateTime::set_month(1);
-		DateTime::Enlarge_year();
+		DateTime::enlarge_year();
 	}
 	else
 		DateTime::set_month(DateTime::get_month() + 1);
+	iterations++;
 }
-void DateTime::Reduce_day() {
+void DateTime::reduce_day() {
 	if (DateTime::get_day() - 1 < 1) {
 		DateTime::set_day(31);
-		DateTime::Reduce_month();
+		DateTime::reduce_month();
 	}
 	else
 		DateTime::set_day(DateTime::get_day() - 1);
+	iterations++;
 }
-void DateTime::Enlarge_day() {
+void DateTime::enlarge_day() {
 	if (DateTime::get_day() + 1 > 31) {
 		DateTime::set_day(1);
-		DateTime::Enlarge_month();
+		DateTime::enlarge_month();
 	}
 	else
 		DateTime::set_day(DateTime::get_day() + 1);
+	iterations++;
 }
-void DateTime::Reduce_hours() {
+void DateTime::reduce_hours() {
 	if (DateTime::get_hours() - 1 < 0) {
 		DateTime::set_hours(23);
-		DateTime::Reduce_day();
+		DateTime::reduce_day();
 	}
 	else
 		DateTime::set_hours(DateTime::get_hours() - 1);
+	iterations++;
 }
-void DateTime::Enlarge_hours(){
+void DateTime::enlarge_hours(){
 	if (DateTime::get_hours() + 1 > 24) {
 		DateTime::set_hours(0);
-		DateTime::Enlarge_day();
+		DateTime::enlarge_day();
 	}
 	else
 		DateTime::set_hours(DateTime::get_hours() + 1);
+	iterations++;
 }
-void DateTime::Reduce_minute() {
+void DateTime::reduce_minute() {
 	if (DateTime::get_minute() - 1 < 0) {
 		DateTime::set_minute(59);
-		DateTime::Reduce_hours();
+		DateTime::reduce_hours();
 	}
 	else
 		DateTime::set_minute(DateTime::get_minute() - 1);
+	iterations++;
 }
-void DateTime::Enlarge_minute() {
+void DateTime::enlarge_minute() {
 	if (DateTime::get_minute() + 1 > 60) {
 		DateTime::set_minute(0);
-		DateTime::Enlarge_hours();
+		DateTime::enlarge_hours();
 	}
 	else
 		DateTime::set_minute(DateTime::get_minute() + 1);
+	iterations++;
 }
-void DateTime::Reduce_second() {
+void DateTime::reduce_second() {
 	if (DateTime::get_second() - 1 < 0) {
 		DateTime::set_minute(59);
-		DateTime::Reduce_minute();
+		DateTime::reduce_minute();
 	}
 	else
 		DateTime::set_second(DateTime::get_second() - 1);
+	iterations++;
 }
-void DateTime::Enlarge_second() {
+void DateTime::enlarge_second() {
 	if (DateTime::get_second() + 1 > 60) {
 		DateTime::set_second(0);
-		DateTime::Enlarge_minute();
+		DateTime::enlarge_minute();
 	}
 	else
 		DateTime::set_second(DateTime::get_second() + 1);
+	iterations++;
 }
 // Геттеры и Сеттеры для полей класса  
 int DateTime::get_day() {
@@ -155,41 +178,41 @@ int DateTime::get_minute() {
 int DateTime::get_second() {
 	return second;
 }
-void DateTime::set_year(int _year) {
-	if (_year < 10000 && _year > 999)
-		year = _year;
+void DateTime::set_year(int year) {
+	if (year < 10000 && year > 999)
+		this->year = year;
 	else
-		year = 2020;
+		this->year = 2020;
 }
-void DateTime::set_month(int _month) {
-	if (_month > 0 && _month < 13)
-		month = _month;
+void DateTime::set_month(int month) {
+	if (month > 0 && month < 13)
+		this->month = month;
 	else
-		month = 9;
+		this->month = 9;
 }
-void DateTime::set_day(int _day) {
-	if (_day > 0 && _day < 32)
-		day = _day;
+void DateTime::set_day(int day) {
+	if (day > 0 && day < 32)
+		this->day = day;
 	else
-		day = 20;
+		this->day = 20;
 }
-void DateTime::set_hours(int _hours) {
-	if (_hours > -1 && _hours < 24)
-		hours = _hours;
+void DateTime::set_hours(int hours) {
+	if (hours > -1 && hours < 24)
+		this->hours = hours;
 	else
-		hours = 12;
+		this->hours = 12;
 }
-void DateTime::set_minute(int _minute) {
-	if (_minute > -1 && _minute < 60)
-		minute = _minute;
+void DateTime::set_minute(int minute) {
+	if (minute > -1 && minute < 60)
+		this->minute = minute;
 	else
-		minute = 0;
+		this->minute = 0;
 }
-void DateTime::set_second(int _second) {
-	if (_second > -1 && _second < 60)
-		second = _second;
+void DateTime::set_second(int second) {
+	if (second > -1 && second < 60)
+		this->second = second;
 	else
-		second = 0;
+		this->second = 0;
 }
 
 
