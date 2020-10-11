@@ -36,6 +36,8 @@ public:
 	static int iterations;
 private:
 	int year, month, day, hours, minute, second;
+	bool leapyear(int year);
+	bool checkmonth(int month);
 };
 
 

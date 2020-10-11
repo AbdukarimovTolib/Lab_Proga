@@ -5,50 +5,37 @@ using namespace std;
 
 void Test() {
 	DateTime today;
-	srand(time(NULL));
-	int month = 0, day = 0, hours = 0, minute = 0, second = 0;
-	cout << "----------------------------------------------------------------" << endl;
+	cout << "" << endl;
 	cout << today.tostring() << endl;
-	cout << "----------------------------------------------------------------" << endl;
-	for (int i = 0; i < rand() % 10; i++)
-	{
-		today.enlarge_month();
-		cout << today.tostring() << endl;
-		month++;
-	}
-	for (int i = 0; i < rand() % 30; i++)
-	{
-		today.reduce_day();
-		cout << today.tostring() << endl;
-		day++;
-	}
-	for (int i = 0; i < rand() % 24; i++)
-	{
-		today.enlarge_hours();
-		cout << today.tostring() << endl;
-		hours++;
-	}
-	for (int i = 0; i < rand() % 59; i++)
-	{
-		today.enlarge_minute();
-		cout << today.tostring() << endl;
-		minute++;
-	}
-	for (int i = 0; i < rand() % 59; i++)
-	{
-		today.reduce_second();
-		cout << today.tostring() << endl;
-		second++;
-	}
-	cout << "----------------------------------------------------------------" << endl;
-	cout << "Ours resalt: " << today.tostring() << endl;
-	cout << "iterations = " << today.iterations << endl;
-	cout << "month + 1*" << month << endl;
-	cout << "hours + 1*" << hours << endl;
-	cout << "minute + 1*" << minute << endl;
-	cout << "second + 1*" << second << endl;
+	cout << "day + 1" << endl;
+	cout << "Expected Result: 01:01:2021     13:45:32" << endl;
+	today.enlarge_day();
+	cout << "Result: " << today.tostring() << endl;
+	today.set_year(2020);
+	today.set_day(29);
+	today.set_month(2);
+	cout << "--------------------------\n" << today.tostring() << "\n" << "day + 1" << endl;
+	cout << "Expected Result: 01:03:2020     13:45:32" << endl;
+	today.enlarge_day();
+	cout << "Result: " << today.tostring() << endl;
+	today.set_year(2022);
+	today.set_day(1);
+	today.set_month(3);
+	cout << "--------------------------\n" << today.tostring() << "\n" << "day - 1" << endl;
+	today.reduce_day();
+	cout << "Expected Result: 28:02:2022     13:45:32" << endl;
+	cout << "Result: " << today.tostring() << endl;
+	today.set_year(2022);
+	today.set_day(1);
+	today.set_month(8);
+	cout << "--------------------------\n" << today.tostring() << "\n" << "day - 1" << endl;
+	today.reduce_day();
+	cout << "Expected Result: 31:07:2022     13:45:32" << endl;
+	cout << "Result: " << today.tostring() << endl;
+	cout << "put inappropriate numbers day = 57 and month = 17" << endl;
+	today.set_day(57);
+	today.set_month(17);
 }
-
 
 int main()
 {
