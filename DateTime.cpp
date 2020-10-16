@@ -27,6 +27,17 @@ DateTime::DateTime(int day, int month, int year, int hours, int minute, int  sec
 	DateTime::setSecond(second);
 }
 
+// copy constructor
+
+DateTime::DateTime(const DateTime &object) {
+	this->year = object.year;
+	this->month = object.month;
+	this->day = object.day;
+	this->hours = object.hours;
+	this->minute = object.minute;
+	this->second = object.second;
+}
+
 //check leap year, return 1 - leap year and return 0 - not leap year
 
 bool DateTime::leapYear(int year) {

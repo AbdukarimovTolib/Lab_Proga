@@ -5,6 +5,7 @@ class DateTime
 public:
 	DateTime();
 	DateTime(int day, int month, int year, int hours, int minute, int  second);
+	DateTime(const DateTime &object);
 	char* toString();
 	void reduceYear(); // year - 1
 	void enlargeYear(); // year + 1

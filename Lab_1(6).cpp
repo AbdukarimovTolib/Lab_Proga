@@ -102,6 +102,19 @@ bool testNotleapyear() {
     }
 }
 
+bool testCopyconstructor() {
+    DateTime tomorrow(22, 4, 2021, 15, 33, 21);
+    DateTime today(tomorrow);
+    cout << "1. " << tomorrow.toString() << endl;
+    cout << "2. " << today.toString() << endl;
+    if (tomorrow.getYear() == today.getYear()) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
 int main()
 {
     cout << "result testLeapyear: " << testLeapyear() <<  endl;
@@ -117,5 +130,7 @@ int main()
     cout << "result testYear: " << testYear() << endl;
     cout << "-------------------------------------------------" << endl;
     cout << "result testNotleapyear: " << testNotleapyear() << endl;
+    cout << "-------------------------------------------------" << endl;
+    cout << "result testCopyconstructor: " << testCopyconstructor() << endl;
     return 0;
 }
