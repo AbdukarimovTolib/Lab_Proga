@@ -38,9 +38,171 @@ DateTime::DateTime(const DateTime& object) {
 	this->second = object.second;
 }
 
+// operator + DateTime < overload >
+
+DateTime& DateTime::operator + (const DateTime& object) {
+	DateTime object2;
+	int box;
+	box = (this->second + object.second) / 60;
+	object2.second = (this->second + object.second) % 60;
+	box = (this->minute + object.minute + box) / 60;
+	object2.minute = (this->minute + object.minute + box) % 60;
+	box = (this->hours + object.hours + box) / 24;
+	object2.hours = (this->hours + object.hours + box) % 24;
+	box = (this->day + object.day + box) / 30;
+	object2.day = (this->day + object.day + box) % 30;
+	box = (this->month + object.month + box) / 12;
+	object2.month = (this->month + object.month + box) % 12;
+	object2.year = this->year + object.year + box;
+	*this = object2;
+	return *this;
+}
+
+//
+
+DateTime& DateTime::operator += (int const number) {
+	int box;
+	box = (this->day + number) / 30;
+	this->day = (this->day + number) % 30;
+	for (int i = 0; i < box; i++)
+	{
+		reduceMonth();
+	}
+	return *this;
+}
+
+//
+
+DateTime& DateTime::operator -= (int const number) {
+	int box = 0, number2;
+	number2 = number - this->day - 1;
+	while (number2 > 30)
+	{
+		number2 -= 30;
+		box++;
+	}
+	this->day = number2;
+	for (int i = 0; i < box; i++)
+	{
+		enlargeMonth();
+	}
+	return *this;
+}
+
+//
+
+DateTime& DateTime::operator+(int const number) {
+	int box;
+	box = (this->hours + number) / 24;
+	this->hours = (this->hours + number) % 24;
+	for (int i = 0; i < box; i++)
+	{
+		reduceDay();
+	}
+	return *this;
+}
+
+//
+
+DateTime& DateTime::operator-(int const number) {
+	int box = 0, number2 = this->hours - number;
+	if (number2 > 0) {
+		this->hours = number2;
+	}
+	else {
+		while (abs(number2) > 24)
+		{
+			number2 += 24;
+			box++;
+		}
+		this->hours = 24 + number2;
+	}
+	for (int i = 0; i < box; i++)
+	{
+		enlargeDay();
+	}
+	return *this;
+}
+
+// operator - DateTime < overload >
+
+DateTime& DateTime::operator - (const DateTime& object) {
+	DateTime object2;
+	int box;
+	if (this->second - object.second < 0) {
+		object2.second = 60 + (this->second - object.second);
+		box = 1;
+	}
+	else {
+		object2.second = this->second - object.second;
+		box = 0;
+	}
+	if (this->minute - object.minute - box < 0) {
+		object2.minute = 60 + (this->minute - object.minute - box) ;
+		box = 1;
+	}
+	else {
+		object2.minute = this->minute - object.minute - box;
+		box = 0;
+	}
+	if (this->hours - object.hours - box < 0) {
+		object2.hours = 24 + (this->hours - object.hours - box);
+		box = 1;
+	}
+	else {
+		object2.hours = this->hours - object.hours - box;
+		box = 0;
+	}
+	if (this->month - object.month - box < 0) {
+		int month1;
+		if (this->month - object.month - box == 2) {
+			int checkyear = leapYear(this->year - object.year - 1);
+			if (checkyear == 1) {
+				month1 = 29;
+			}
+			else {
+				month1 = 28;
+			}
+		}
+		else {
+			int checkmonth = checkMonth(this->month - object.month - box);
+			if (checkmonth == 1) {
+				month1 = 31;
+			}
+			else {
+				month1 = 30;
+			}
+		}
+		object2.month = month1 + (this->month - object.month - box);
+		box = 1;
+	}
+	else {
+		object2.month = this->month - object.month - box;
+		box = 0;
+	}
+	if (this->year - object.year < 0) {
+		cout << "Eror!" << endl;
+		object2.year = 0;
+	}
+	else {
+		object2.year = this->year - object.year - box;
+	}
+	*this = object2;
+	return *this;
+}
+
+// toString operator < overload >
+
+DateTime::operator char* () {
+	return toString();
+}
+
 // assignment operator < overload >
 
 DateTime& DateTime::operator= (const DateTime& object) {
+	if (this == &object) {
+		return *this;
+	}
 	this->year = object.year;
 	this->month = object.month;
 	this->day = object.day;
@@ -159,97 +321,6 @@ char* DateTime::toString() {
 	return resChar;
 }
 
-// translation to string < overload >
-
-char* DateTime::toString(char* array, const int size) {
-	char adate[5], ayear[5], amonth[5], ahours[5], aminute[5], asecond[5];
-	int ysize = 0, gsize = 0;
-	if (DateTime::getYear() > 999 && DateTime::getYear() < 10000) {
-		ayear[0] = DateTime::getYear() / 1000 + '0';
-		ayear[1] = (DateTime::getYear() / 100) % 10 + '0';
-		ayear[2] = (DateTime::getYear() / 10) % 10 + '0';
-		ayear[3] = DateTime::getYear() % 10 + '0';
-		ysize += 4;
-	}
-	else if (DateTime::getYear() > 99 && DateTime::getYear() < 1000)
-	{
-		ayear[0] = DateTime::getYear() / 100 + '0';
-		ayear[1] = (DateTime::getYear() / 10) % 10 + '0';
-		ayear[2] = DateTime::getYear() % 10 + '0';
-		ysize += 3;
-	}
-	if (DateTime::getDay() > 9) {
-		adate[0] = DateTime::getDay() / 10 + '0';
-		adate[1] = DateTime::getDay() % 10 + '0';
-	}
-	else {
-		adate[0] = '0';
-		adate[1] = DateTime::getDay() + '0';
-	}
-	if (DateTime::getMonth() > 9) {
-		amonth[0] = DateTime::getMonth() / 10 + '0';
-		amonth[1] = DateTime::getMonth() % 10 + '0';
-	}
-	else {
-		amonth[0] = '0';
-		amonth[1] = DateTime::getMonth() + '0';
-	}
-	if (DateTime::getHours() > 9) {
-		ahours[0] = DateTime::getHours() / 10 + '0';
-		ahours[1] = DateTime::getHours() % 10 + '0';
-	}
-	else {
-		ahours[0] = '0';
-		ahours[1] = DateTime::getHours() + '0';
-	}
-	if (DateTime::getMinute() > 9) {
-		aminute[0] = DateTime::getMinute() / 10 + '0';
-		aminute[1] = DateTime::getMinute() % 10 + '0';
-	}
-	else {
-		aminute[0] = '0';
-		aminute[1] = DateTime::getMinute() + '0';
-	}
-	if (DateTime::getSecond() > 9) {
-		asecond[0] = DateTime::getSecond() / 10 + '0';
-		asecond[1] = DateTime::getSecond() % 10 + '0';
-	}
-	else {
-		asecond[0] = '0';
-		asecond[1] = DateTime::getSecond() + '0';
-	}
-	gsize = ysize + 10;
-	if (size >= gsize + 6) {
-		for (int i = 0; i < 2; i++)
-			array[i] = adate[i];
-		array[2] = ':';
-		for (int i = 0; i < 2; i++)
-			array[i + 3] = amonth[i];
-		array[5] = ':';
-		for (int i = 0; i < ysize; i++)
-			array[i + 6] = ayear[i];
-		array[6 + ysize] = '\t';
-		for (int i = 0; i < 2; i++)
-			array[i + ysize + 7] = ahours[i];
-		array[9 + ysize] = ':';
-		for (int i = 0; i < 2; i++)
-			array[i + ysize + 10] = aminute[i];
-		array[ysize + 12] = ':';
-		for (int i = 0; i < 2; i++)
-			array[ysize + 13 + i] = asecond[i];
-		array[gsize + 6 - 1] = '\0';
-	}
-	else {
-		for (int i = 0; i < size - 1; i++)
-		{
-			array[i] = ' ';
-		}
-		array[size - 1] = '\0';
-		cout << "Array size must be greater than " << gsize + 5 << "!" << endl;
-	}
-	return array;
-}
-
 // reduce or enlarge year, month, day, hours, minute and second
 // year - 1
 
@@ -258,33 +329,11 @@ void DateTime::reduceYear() {
 	iterations++;
 }
 
-// year - number < overload >
-
-void DateTime::reduceYear(int number) {
-	if (DateTime::getYear() - number >= 0 && number >= 0) {
-		DateTime::setYear(DateTime::getYear() - number);
-	}
-	else {
-		cout << "Invalid value! Year value cannot be more than 9999 and negative " << endl;
-	}
-}
-
 // year + 1
 
 void DateTime::enlargeYear() {
 	DateTime::setYear(DateTime::getYear() + 1);
 	iterations++;
-}
-
-// year + number < overload >
-
-void DateTime::enlargeYear(int number) {
-	if (DateTime::getYear() + number <= 9999 && number >= 0) {
-		DateTime::setYear(DateTime::getYear() + number);
-	}
-	else {
-		cout << "Invalid value! Year value cannot be more than 9999 and negative " << endl;
-	}
 }
 
 // month - 1
@@ -300,21 +349,6 @@ void DateTime::reduceMonth() {
 	iterations++;
 }
 
-// month - number < overload >
-
-void DateTime::reduceMonth(int number) {
-	if (number >= 0) {
-		DateTime::reduceYear(number / 12);
-		for (int i = 0; i < number % 12; i++)
-		{
-			DateTime::reduceMonth();
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
-}
-
 // month + 1
 
 void DateTime::enlargeMonth() {
@@ -326,21 +360,6 @@ void DateTime::enlargeMonth() {
 		DateTime::setMonth(DateTime::getMonth() + 1);
 	}
 	iterations++;
-}
-
-// month + number < overload >
-
-void DateTime::enlargeMonth(int number) {
-	if (number >= 0) {
-		DateTime::enlargeYear(number / 12);
-		for (int i = 0; i < number % 12; i++)
-		{
-			DateTime::enlargeMonth();
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
 }
 
 // day - 1
@@ -372,31 +391,6 @@ void DateTime::reduceDay() {
 	iterations++;
 }
 
-// day - number < overload >
-
-void DateTime::reduceDay(int number) {
-	if (number >= 0){
-		if (number >= 365) {
-			number = number + 7 * (number / 365) - number / 1460;
-			DateTime::reduceMonth(number / 31);
-			for (int i = 0; i < number % 31; i++)
-			{
-				DateTime::reduceDay();
-			} 
-		}
-		else {
-			DateTime::reduceMonth(number / 30);
-			for (int i = 0; i < number % 30; i++)
-			{
-				DateTime::reduceMonth();
-			}
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
-}
-
 // day + 1
 
 void DateTime::enlargeDay() {
@@ -422,31 +416,6 @@ void DateTime::enlargeDay() {
 	iterations++;
 }
 
-// day + number < overload >
-
-void DateTime::enlargeDay(int number) {
-	if (number >= 0) {
-		if (number >= 365) {
-			number = number + 7 * (number / 365) - number / 1460;
-			DateTime::enlargeMonth(number / 31);
-			for (int i = 0; i < number % 31; i++)
-			{
-				DateTime::enlargeDay();
-			}
-		}
-		else {
-			DateTime::enlargeMonth(number / 30);
-			for (int i = 0; i < number % 30; i++)
-			{
-				DateTime::enlargeDay();
-			}
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
-}
-
 // hours - 1
 
 void DateTime::reduceHours() {
@@ -459,22 +428,6 @@ void DateTime::reduceHours() {
 	}
 	iterations++;
 }
-
-// hours - number < overload >
-
-void DateTime::reduceHours(int number) {
-	if (number >= 0) {
-		DateTime::reduceDay(number / 24);
-		for (int i = 0; i < number % 24; i++)
-		{
-			DateTime::reduceHours();
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
-}
-
 // hours + 1
 
 void DateTime::enlargeHours() {
@@ -486,21 +439,6 @@ void DateTime::enlargeHours() {
 		DateTime::setHours(DateTime::getHours() + 1);
 	}
 	iterations++;
-}
-
-// hours + number < overload >
-
-void DateTime::enlargeHours(int number) {
-	if (number >= 0) {
-		DateTime::enlargeDay(number / 24);
-		for (int i = 0; i < number % 24; i++)
-		{
-			DateTime::enlargeHours();
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
 }
 
 // minute - 1
@@ -516,21 +454,6 @@ void DateTime::reduceMinute() {
 	iterations++;
 }
 
-// minute - number < overload >
-
-void DateTime::reduceMinute(int number) {
-	if (number >= 0) {
-		DateTime::reduceHours(number / 60);
-		for (int i = 0; i < number % 60; i++)
-		{
-			DateTime::reduceMinute();
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
-}
-
 // minute + 1
 
 void DateTime::enlargeMinute() {
@@ -542,21 +465,6 @@ void DateTime::enlargeMinute() {
 		DateTime::setMinute(DateTime::getMinute() + 1);
 	}
 	iterations++;
-}
-
-// minute + number < overload >
-
-void DateTime::enlargeMinute(int number) {
-	if (number >= 0) {
-		DateTime::enlargeHours(number / 60);
-		for (int i = 0; i < number % 60; i++)
-		{
-			DateTime::enlargeMinute();
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
 }
 
 // second - 1
@@ -572,21 +480,6 @@ void DateTime::reduceSecond() {
 	iterations++;
 }
 
-// second - number < overload >
-
-void DateTime::reduceSecond(int number) {
-	if (number >= 0) {
-		DateTime::reduceMinute(number / 60);
-		for (int i = 0; i < number % 60; i++)
-		{
-			DateTime::reduceSecond();
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
-}
-
 // second + 1
 
 void DateTime::enlargeSecond() {
@@ -598,21 +491,6 @@ void DateTime::enlargeSecond() {
 		DateTime::setSecond(DateTime::getSecond() + 1);
 	}
 	iterations++;
-}
-
-// second + number < overload >
-
-void DateTime::enlargeSecond(int number) {
-	if (number >= 0) {
-		DateTime::enlargeMinute(number / 60);
-		for (int i = 0; i < number % 60; i++)
-		{
-			DateTime::enlargeSecond();
-		}
-	}
-	else {
-		cout << "The value cannot be negative!" << endl;
-	}
 }
 
 // Get year, month, day, hours, minute, second
