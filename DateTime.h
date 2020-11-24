@@ -7,12 +7,12 @@ public:
 	DateTime(int day, int month, int year, int hours, int minute, int  second);
 	DateTime(const DateTime& object);
 	DateTime& operator = (const DateTime& object);
-	DateTime& operator + (const DateTime& object);
 	DateTime& operator - (const DateTime& object);
 	DateTime& operator += (int const number);
 	DateTime& operator -= (int const number);
 	DateTime& operator + (int const number);
 	DateTime& operator - (int const number);
+	friend DateTime& operator+(const DateTime &object1, const DateTime &object2);
 	operator char* ();
 	char* toString();
 	void reduceYear(); // year - 1
@@ -46,3 +46,5 @@ private:
 	bool leapYear(int year);
 	bool checkMonth(int month);
 };
+
+DateTime& operator+(const DateTime& object1, const DateTime& object2);

@@ -38,6 +38,23 @@ DateTime::DateTime(const DateTime& object) {
 	this->second = object.second;
 }
 
+DateTime& operator+(const DateTime& object1, const DateTime& object2) {
+	DateTime object3;
+	int box;
+	box = (object1.second + object2.second) / 60;
+	object3.second = (object1.second + object2.second) % 60;
+	box = (object1.minute + object2.minute + box) / 60;
+	object3.minute = (object1.minute + object2.minute + box) % 60;
+	box = (object1.hours + object2.hours + box) / 24;
+	object3.hours = (object1.hours + object2.hours + box) % 24;
+	box = (object1.day + object2.day + box) / 30;
+	object3.day = (object1.day + object2.day + box) % 30;
+	box = (object1.month + object2.month + box) / 12;
+	object3.month = (object1.month + object2.month + box) % 12;
+	object3.year = object1.year + object2.year + box;
+	return object3;
+}
+
 // operator + DateTime < overload >
 
 DateTime& DateTime::operator + (const DateTime& object) {

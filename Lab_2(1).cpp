@@ -25,12 +25,11 @@ bool testoperatoroverload() {
 }
 
 bool testoperatorminusdatetime() {
-    DateTime today(11, 3, 2016, 8, 19, 33), tomorrow(3, 8, 2022, 11, 21, 19);
+    DateTime today(11, 3, 2016, 8, 19, 33), tomorrow(3, 8, 2122, 11, 21, 19);
     cout << "today: " << today.toString() << endl;
     cout << "tomorrow: " << tomorrow.toString() << endl;
     cout << (tomorrow.operator-(today)).toString() << endl;
     return 1;
-
 }
 
 bool testoperatorplusdatetime() {
